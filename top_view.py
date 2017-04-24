@@ -20,12 +20,42 @@ def scale_to_255(a, min, max, dtype=np.uint8):
     """
     return (((a - min) / float(max - min)) * 255).astype(dtype)
 
+
+# ==============================================================================
+#                                                         POINT_CLOUD_2_BIRDSEYE
+# ==============================================================================
 def point_cloud_2_birdseye(points,
                            res=0.1,
                            side_range=(-10., 10.),  # left-most to right-most
                            fwd_range = (-10., 10.), # back-most to forward-most
                            height_range=(-2., 2.),  # bottom-most to upper-most
                            ):
+    """ Creates an 2D birds eye view representation of the point cloud data for
+        the given rectangular region provided by `side_range` and `fwd_range`.
+        The pixel values are scaled to 0-255 for the height range specified by
+        `height_range`.
+
+    Args:
+        points:     (numpy array)
+                    N rows of points data
+                    Each point should be specified by at least 3 elements x,y,z
+        res:        (float)
+                    Desired resolution in metres to use. Each output pixel will
+                    represent an square region res x res in size.
+        side_range: (tuple of two floats)
+                    (-left, right)
+                    left and right limits of rectangle to look at.
+        fwd_range:  (tuple of two floats)
+                    (-behind, front)
+                    back and front limits of rectangle to look at.
+        height_range: (tuple of two floats)
+                    (min, max) heights relative to the origin.
+                    All height values will be clipped to this min and max value,
+                    such that anything below min will be truncated to min, and
+                    the same for values above max.
+    Returns:
+        2D numpy array representing an image of the birds eye view.
+    """
     # EXTRACT THE POINTS FOR EACH AXIS
     x_points = points[:, 0]
     y_points = points[:, 1]
@@ -72,3 +102,4 @@ def point_cloud_2_birdseye(points,
     im[y_img, x_img] = pixel_values
 
     return im
+

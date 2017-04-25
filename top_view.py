@@ -4,7 +4,7 @@
 Functions for top views of point cloud data
 =======================================================
 """
-__author__ = 'ronny'
+__author__ = 'Ronny Restrepo'
 
 
 

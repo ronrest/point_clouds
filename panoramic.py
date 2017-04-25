@@ -19,6 +19,9 @@ def scale_to_255(a, min, max, dtype=np.uint8):
     return (((a - min) / float(max - min)) * 255).astype(dtype)
 
 
+# ==============================================================================
+#                                                        POINT_CLOUD_TO_PANORAMA
+# ==============================================================================
 def point_cloud_to_panorama(points,
                             v_res=0.42,
                             h_res = 0.35,
@@ -26,6 +29,32 @@ def point_cloud_to_panorama(points,
                             d_range = (0,100),
                             y_fudge=3
                             ):
+    """ Given point cloud data from something like a LIDAR sensor, it creates a
+        360 degree panoramic image, returned as a numpy array.
+
+    Args:
+        points: (np array)
+            The numpy array containing the point cloud. .
+            The shape should be at least Nx3 (allowing for more columns)
+            - Where N is the number of points, and
+            - each point is specified by at least 3 values (x, y, z)
+        v_res: (float)
+            vertical angular resolution in degrees. This will influence the
+            height of the output image.
+        h_res: (float)
+            horizontal angular resolution in degrees. This will influence
+            the width of the output image.
+        v_fov: (tuple of two floats)
+            Field of view in degrees (-min_negative_angle, max_positive_angle)
+        d_range: (tuple of two floats) (default = (0,100))
+            Used for clipping distance values to be within a min and max range.
+        y_fudge: (float)
+            A hacky fudge factor to use if the theoretical calculations of
+            vertical image height do not match the actual data.
+    Returns:
+        A numpy array representing a 360 degree panoramic image of the point
+        cloud.
+    """
     # Projecting to 2D
     x_points = points[:, 0]
     y_points = points[:, 1]
@@ -70,3 +99,4 @@ def point_cloud_to_panorama(points,
     img[y_img, x_img] = scale_to_255(d_points, min=d_range[0], max=d_range[1])
 
     return img
+

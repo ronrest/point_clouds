@@ -4,7 +4,7 @@ Visualisations of point cloud data using the mayavi
 library
 =======================================================
 """
-__author__ = 'Ronny Restrep'
+__author__ = 'Ronny Restrepo'
 
 import numpy as np
 import mayavi.mlab
